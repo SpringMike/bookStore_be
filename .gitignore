@@ -13,7 +13,8 @@ target/
 .springBeans
 .sts4-cache
 
-.mvn
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
 
 ### IntelliJ IDEA ###
 .idea
