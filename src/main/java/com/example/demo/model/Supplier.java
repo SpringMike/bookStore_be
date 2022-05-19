@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Supplier {
     private String name;
     private boolean status;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "supplier",cascade = CascadeType.ALL)
     private List<Book> books;
 }

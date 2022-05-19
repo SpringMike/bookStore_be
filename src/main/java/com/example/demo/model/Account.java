@@ -7,22 +7,32 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Publisher {
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String userName;
+    private String password;
+    private String fullName;
+    private String image;
+    private String email;
+    private String phoneNumber;
     private boolean status;
+    private String mainAddress;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "publisher",cascade = CascadeType.ALL)
-    private List<Book> books;
+    @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
+    private List<Address> addresses;
+
+
 }

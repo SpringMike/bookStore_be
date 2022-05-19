@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,22 +8,26 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Publisher {
+public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private boolean status;
+    private String address;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "publisher",cascade = CascadeType.ALL)
-    private List<Book> books;
+    @ManyToOne
+    @JoinColumn(name = "accountId", insertable = false,updatable = false)
+    private Account account;
+    private Long accountId;
+
+
 }
