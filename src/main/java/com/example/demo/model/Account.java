@@ -35,4 +35,14 @@ public class Account {
     private List<Address> addresses;
 
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
+    private List<Cart> carts;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
+    private List<Order> orders;
+
+
+
 }

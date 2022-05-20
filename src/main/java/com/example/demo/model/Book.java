@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.security.PublicKey;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -89,6 +90,14 @@ public class Book {
     @JoinColumn(name = "supplierId", insertable = false,updatable = false)
     private Supplier supplier;
     private Long supplierId;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    private List<CartDetail> cartDetails;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    private List<OrderDetail> orderDetails;
 
     private boolean status;
 }
