@@ -30,7 +30,22 @@ public class CategoryService implements ICategoryService {
         if (categoryFromDb != null){
             categoryFromDb.setName(category.getName());
             categoryFromDb.setNote(category.getNote());
-            categoryFromDb.setStatus(category.isStatus());
+            categoryRepo.save(categoryFromDb);
+        }
+        return null;
+    }
+
+    @Override
+    public Category updateStatus(long id) {
+        Category categoryFromDb = categoryRepo.findById(id).orElse(null);
+        if (categoryFromDb!= null){
+            if (categoryFromDb.isStatus()){
+                categoryFromDb.setStatus(false);
+                categoryRepo.save(categoryFromDb);
+            }else {
+                categoryFromDb.setStatus(true);
+                categoryRepo.save(categoryFromDb);
+            }
         }
         return null;
     }

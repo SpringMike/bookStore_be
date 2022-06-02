@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.FeaturedBookDTO;
+import com.example.demo.model.Account;
 import com.example.demo.model.Book;
 import com.example.demo.model.Category;
 import com.example.demo.service.impl.BookService;
@@ -21,7 +22,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public List<Category> getAllBook(){
+    public List<Category> getAllCategories(){
         return categoryService.getAllCategory();
     }
 
@@ -31,7 +32,7 @@ public class CategoryController {
     }
 
     @PutMapping
-    public Category updateProduct(@RequestBody Category category){
+    public Category updateCategory(@RequestBody Category category){
         return categoryService.update(category);
     }
 
@@ -41,8 +42,12 @@ public class CategoryController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HttpStatus> deleteProduct(@PathVariable long id){
+    public ResponseEntity<HttpStatus> deleteCategory(@PathVariable long id){
         categoryService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @PutMapping("/updateStatus/{id}")
+    public Category updateStatus(@PathVariable long id) {
+        return categoryService.updateStatus(id);
     }
 }

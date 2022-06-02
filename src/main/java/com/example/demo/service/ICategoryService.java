@@ -15,6 +15,8 @@ public interface ICategoryService {
 
     Category update(Category category);
 
+    Category updateStatus(long id);
+
     Optional<Category> findById(long id);
 
     void deleteById(long id);
