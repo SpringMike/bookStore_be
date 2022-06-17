@@ -23,4 +23,8 @@ public class CartDetailDTO {
     private Double price;
     private Integer quantity;
     private Double total;
+    private Float newPrice;
+    private Float newTotal;
+    private Long promotionBlackListId;
+    private Integer sale;
 }

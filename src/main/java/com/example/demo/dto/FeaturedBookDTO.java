@@ -21,7 +21,6 @@ public class FeaturedBookDTO {
     private String language;
     private String name;
     private int number_page;
-    private float price;
     private String public_year;
     private int quantity;
     private boolean status;
@@ -29,4 +28,9 @@ public class FeaturedBookDTO {
     private String categoryName;
     private String supplierName;
     private String publisherName;
+    private Float price;
+    private Integer sale;
+    private Float newPrice;
+    private Integer blackListPromotionId;
+
 }

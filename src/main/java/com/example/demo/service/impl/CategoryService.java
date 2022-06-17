@@ -51,6 +51,16 @@ public class CategoryService implements ICategoryService {
     }
 
     @Override
+    public List<Category> findByPromotionInclude(Long promotionId) {
+        return categoryRepo.findByPromotionInclude(promotionId);
+    }
+
+    @Override
+    public List<Category> findAllByPromotionInclude(Long promotionId) {
+        return categoryRepo.findAllByPromotionInclude(promotionId);
+    }
+
+    @Override
     public Optional<Category> findById(long id) {
         if (id < 0){
             return Optional.empty();

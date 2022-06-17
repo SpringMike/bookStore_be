@@ -16,6 +16,10 @@ public interface IBookService {
 
     FeaturedBookDTO findById(long id);
 
+    List<Book> findByPromotion(long promotionId);
+
+    List<Book> findByBlackList(long promotionId);
+
     Book findById2(long id);
 
     void deleteById(long id);

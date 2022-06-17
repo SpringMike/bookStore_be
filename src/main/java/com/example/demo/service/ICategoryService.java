@@ -17,6 +17,10 @@ public interface ICategoryService {
 
     Category updateStatus(long id);
 
+    List<Category> findByPromotionInclude(Long promotionId);
+
+    List<Category> findAllByPromotionInclude(Long promotionId);
+
     Optional<Category> findById(long id);
 
     void deleteById(long id);

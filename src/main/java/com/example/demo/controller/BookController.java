@@ -7,6 +7,7 @@ import com.example.demo.service.impl.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,22 +41,26 @@ public class BookController {
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Book updateProduct(@RequestBody Book book) {
         return bookService.update(book);
     }
 
     @PutMapping("/updateStatus/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> updateStatusProduct(@PathVariable Long id) {
         bookService.updateStatusBook(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public Book saveProduct(@RequestBody Book book) {
         return bookService.save(book);
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> deleteProduct(@PathVariable long id) {
         bookService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -72,4 +77,15 @@ public class BookController {
         return bookService.findPaginatedByCategory(pageNo, pageSize, sortBy, sortDir,Long.parseLong(categoryId));
     }
 
+    @GetMapping("/findByPromotion/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Book> getAllBook(@PathVariable long id) {
+        return bookService.findByPromotion(id);
+    }
+
+    @GetMapping("/findByBlackList/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<Book> getAllBookFromBlackList(@PathVariable long id) {
+        return bookService.findByBlackList(id);
+    }
 }

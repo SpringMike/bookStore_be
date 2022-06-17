@@ -31,7 +31,7 @@ public class OrderDetail {
     private Order order;
     private Long orderId;
 
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name = "bookId", insertable = false,updatable = false)
     private Book book;

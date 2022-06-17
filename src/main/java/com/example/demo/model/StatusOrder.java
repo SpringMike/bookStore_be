@@ -20,7 +20,7 @@ public class StatusOrder {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private ETypeOrder typeOrder;
+    private EStatusOrder typeOrder;
 
     @JsonIgnore
     @OneToMany(mappedBy = "statusOrder",cascade = CascadeType.ALL)

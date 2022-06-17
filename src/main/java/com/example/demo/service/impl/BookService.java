@@ -6,17 +6,14 @@ import com.example.demo.model.Book;
 import com.example.demo.repo.IBookRepo;
 import com.example.demo.service.IBookService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.util.List;
-import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 @Service
 @RequiredArgsConstructor
 public class BookService implements IBookService {
@@ -29,6 +26,7 @@ public class BookService implements IBookService {
     @Override
     public List<FeaturedBookDTO> getAllBookFeatured() {
         List<FeaturedBookDTO> listFeaturedBook = entityManager.createNamedQuery("getFeaturedBook").getResultList();
+        System.out.println(listFeaturedBook);
         return listFeaturedBook;
     }
 
@@ -40,7 +38,7 @@ public class BookService implements IBookService {
     @Override
     public Book update(Book book) {
         Book bookFromDb = bookRepo.findById(book.getId()).orElse(null);
-        if (bookFromDb!= null){
+        if (bookFromDb != null){
             bookFromDb.setName(book.getName());
             bookFromDb.setPrice(book.getPrice());
             bookFromDb.setDescription(book.getDescription());
@@ -63,16 +61,46 @@ public class BookService implements IBookService {
         if (id < 0){
             return null;
         }
-        String sql ="select b.id id, b.back_cover_image, b.front_cover_image, b.description, b.language,b.name as bookName,b.number_page,b.price,b.public_year,\n" +
-                "       b.quantity,b.status as bookStatus,a.name as authorName , c.name as categoryName, p.name as publisherName, s.name as supplierName\n" +
-                "from book b inner join author a on a.id = b.author_id\n" +
-                "            inner join category c on c.id = b.category_id\n" +
-                "            inner join publisher p on p.id = b.publisher_id\n" +
-                "            inner join supplier s on s.id = b.supplier_id where b.id = ?1\n";
-
+        String sql ="select b.id  as id,\n" +
+                "       b.back_cover_image,\n" +
+                "       b.front_cover_image,\n" +
+                "       b.description,\n" +
+                "       b.language,\n" +
+                "       b.name   as bookName,\n" +
+                "       b.number_page,\n" +
+                "       b.public_year,\n" +
+                "       b.quantity,\n" +
+                "       b.status as bookStatus,\n" +
+                "       a.name   as authorName,\n" +
+                "       c.name   as categoryName,\n" +
+                "       pu.name   as publisherName,\n" +
+                "       s.name   as supplierName,\n" +
+                "       b.price as price,\n" +
+                "       p.sale as sale,\n" +
+                "       b.price - ( CAST(b.price as float) * (CAST(p.sale as float) / 100 )) as newPrice,\n" +
+                "       pbl.promotion_id as blackListPromotionId\n" +
+                "from promotion p\n" +
+                "         right join promotion_categories pc on p.id = pc.promotion_id\n" +
+                "         right join category c on c.id = pc.category_id\n" +
+                "         right join book b on c.id = b.category_id\n" +
+                "         inner join author a on a.id = b.author_id\n" +
+                "         inner join publisher pu on pu.id = b.publisher_id\n" +
+                "         inner join supplier s on s.id = b.supplier_id\n" +
+                "         left join promotion_black_list pbl on b.id = pbl.book_id" +
+                "         where b.id=?1";
         Query query = this.entityManager.createNativeQuery(sql.toString(),"FeaturedBookMapping");
         query.setParameter(1,id);
         return (FeaturedBookDTO) query.getSingleResult();
+    }
+
+    @Override
+    public List<Book> findByPromotion(long promotionId) {
+        return bookRepo.findByPromotionId(promotionId);
+    }
+
+    @Override
+    public List<Book> findByBlackList(long promotionId) {
+        return bookRepo.findByBlackList(promotionId);
     }
 
     @Override
@@ -107,18 +135,53 @@ public class BookService implements IBookService {
 
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
 
-        Page<Book> books = bookRepo.findByCategoryId(categoryId,pageable);
+        String sql ="select b.id  as id,\n" +
+                "       b.back_cover_image,\n" +
+                "       b.front_cover_image,\n" +
+                "       b.description,\n" +
+                "       b.language,\n" +
+                "       b.name   as bookName,\n" +
+                "       b.number_page,\n" +
+                "       b.public_year,\n" +
+                "       b.quantity,\n" +
+                "       b.status as bookStatus,\n" +
+                "       a.name   as authorName,\n" +
+                "       c.name   as categoryName,\n" +
+                "       pu.name   as publisherName,\n" +
+                "       s.name   as supplierName,\n" +
+                "       b.price as price,\n" +
+                "       p.sale as sale,\n" +
+                "       b.price - ( CAST(b.price as float) * (CAST(p.sale as float) / 100 )) as newPrice,\n" +
+                "       pbl.promotion_id as blackListPromotionId\n" +
+                "from promotion p\n" +
+                "         right join promotion_categories pc on p.id = pc.promotion_id\n" +
+                "         right join category c on c.id = pc.category_id\n" +
+                "         right join book b on c.id = b.category_id\n" +
+                "         inner join author a on a.id = b.author_id\n" +
+                "         inner join publisher pu on pu.id = b.publisher_id\n" +
+                "         inner join supplier s on s.id = b.supplier_id\n" +
+                "         left join promotion_black_list pbl on b.id = pbl.book_id\n" +
+                "where b.category_id=?1\n";
+
+
+        Query query = this.entityManager.createNativeQuery(sql.toString(),"FeaturedBookMapping");
+        query.setParameter(1,categoryId);
+
+
+        List<FeaturedBookDTO> books1 = query.getResultList();
+
+        Page<FeaturedBookDTO> bookDTOS = new PageImpl<FeaturedBookDTO>(books1, pageable,books1.size());
 
         // get content for page object
-        List<Book> listOfBooks = books.getContent();
+        List<FeaturedBookDTO> listOfBooks = bookDTOS.getContent();
 
         BookResponse bookResponse = new BookResponse();
         bookResponse.setContent(listOfBooks);
-        bookResponse.setPageNo(books.getNumber());
-        bookResponse.setPageSize(books.getSize());
-        bookResponse.setTotalElements(books.getTotalElements());
-        bookResponse.setTotalPages(books.getTotalPages());
-        bookResponse.setLast(books.isLast());
+        bookResponse.setPageNo(bookDTOS.getNumber());
+        bookResponse.setPageSize(bookDTOS.getSize());
+        bookResponse.setTotalElements(bookDTOS.getTotalElements());
+        bookResponse.setTotalPages(bookDTOS.getTotalPages());
+        bookResponse.setLast(bookDTOS.isLast());
 
         return bookResponse;
     }

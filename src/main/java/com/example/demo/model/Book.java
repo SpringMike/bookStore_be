@@ -19,12 +19,32 @@ import java.util.List;
 @AllArgsConstructor
 @NamedNativeQuery(
         name = "getFeaturedBook",
-        query = "select b.id id, b.back_cover_image, b.front_cover_image, b.description, b.language,b.name as bookName,b.number_page,b.price,b.public_year,\n" +
-                "       b.quantity,b.status as bookStatus,a.name as authorName , c.name as categoryName, p.name as publisherName, s.name as supplierName\n" +
-                "from book b inner join author a on a.id = b.author_id\n" +
-                "            inner join category c on c.id = b.category_id\n" +
-                "            inner join publisher p on p.id = b.publisher_id\n" +
-                "            inner join supplier s on s.id = b.supplier_id",
+        query = "select b.id  as id,\n" +
+                "       b.back_cover_image,\n" +
+                "       b.front_cover_image,\n" +
+                "       b.description,\n" +
+                "       b.language,\n" +
+                "       b.name   as bookName,\n" +
+                "       b.number_page,\n" +
+                "       b.public_year,\n" +
+                "       b.quantity,\n" +
+                "       b.status as bookStatus,\n" +
+                "       a.name   as authorName,\n" +
+                "       c.name   as categoryName,\n" +
+                "       pu.name   as publisherName,\n" +
+                "       s.name   as supplierName,\n" +
+                "       b.price as price,\n" +
+                "       p.sale as sale,\n" +
+                "       b.price - ( CAST(b.price as float) * (CAST(p.sale as float) / 100 )) as newPrice,\n" +
+                "       pbl.promotion_id as blackListPromotionId\n" +
+                "from promotion p\n" +
+                "         right join promotion_categories pc on p.id = pc.promotion_id\n" +
+                "         right join category c on c.id = pc.category_id\n" +
+                "         right join book b on c.id = b.category_id\n" +
+                "         inner join author a on a.id = b.author_id\n" +
+                "         inner join publisher pu on pu.id = b.publisher_id\n" +
+                "         inner join supplier s on s.id = b.supplier_id\n" +
+                "         left join promotion_black_list pbl on b.id = pbl.book_id\n",
         resultSetMapping = "FeaturedBookMapping"
 )
 @SqlResultSetMapping(
@@ -40,7 +60,6 @@ import java.util.List;
                                 @ColumnResult(name="language", type = String.class),
                                 @ColumnResult(name="bookName", type = String.class),
                                 @ColumnResult(name="number_page", type = Integer.class),
-                                @ColumnResult(name="price", type = Float.class),
                                 @ColumnResult(name="public_year", type = String.class),
                                 @ColumnResult(name="quantity", type = Integer.class),
                                 @ColumnResult(name="bookStatus", type = Boolean.class),
@@ -48,6 +67,10 @@ import java.util.List;
                                 @ColumnResult(name="categoryName", type = String.class),
                                 @ColumnResult(name="publisherName", type = String.class),
                                 @ColumnResult(name="supplierName", type = String.class),
+                                @ColumnResult(name="price", type = Float.class),
+                                @ColumnResult(name="sale", type = Integer.class),
+                                @ColumnResult(name="newPrice", type = Float.class),
+                                @ColumnResult(name="blackListPromotionId", type = Integer.class),
                         }
                 )
         }

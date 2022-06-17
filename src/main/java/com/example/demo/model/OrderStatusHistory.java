@@ -20,13 +20,16 @@ public class OrderStatusHistory {
 
     private String create_date;
 
+    @Column(name = "is_done")
+    private boolean isDone;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "orderId", insertable = false,updatable = false)
     private Order order;
     private Long orderId;
 
-    @JsonIgnore
+
     @ManyToOne
     @JoinColumn(name = "statusOrderId", insertable = false,updatable = false)
     private StatusOrder statusOrder;
