@@ -3,11 +3,13 @@ package com.example.demo.controller;
 import com.example.demo.config.PaymentConfig;
 import com.example.demo.dto.PaymentDTO;
 import com.example.demo.dto.PaymentResultDTO;
-import com.example.demo.model.Transaction;
-import com.example.demo.service.impl.TransactionService;
-import lombok.AllArgsConstructor;
+import com.example.demo.model.Order;
+import com.example.demo.model.TransactionHistory;
+import com.example.demo.service.ITransactionService;
+import com.example.demo.service.impl.OrderDetailService;
+import com.example.demo.service.impl.OrderService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
+import org.hibernate.Transaction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,16 +23,17 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/payments")
+@CrossOrigin("*")
 public class PaymentController {
 
-    private final TransactionService transactionService;
+    private final ITransactionService transactionService;
+    private final OrderService orderService;
+    private final OrderDetailService orderDetailService;
 
     @PostMapping("/create-payment")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public ResponseEntity<?> createPayment(@RequestBody PaymentDTO paymentDTO) throws UnsupportedEncodingException {
-
         int amount = paymentDTO.getAmount() * 100;
-
         Map<String, String> vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", PaymentConfig.VERSIONVNPAY);
         vnp_Params.put("vnp_Command", PaymentConfig.COMMAND);
@@ -38,7 +41,7 @@ public class PaymentController {
         vnp_Params.put("vnp_Amount", String.valueOf(amount));
         vnp_Params.put("vnp_CurrCode", PaymentConfig.CURRCODE);
         vnp_Params.put("vnp_BankCode", paymentDTO.getBankCode());
-        vnp_Params.put("vnp_TxnRef", String.valueOf(paymentDTO.getIdServicePack()));
+        vnp_Params.put("vnp_TxnRef", String.valueOf(PaymentConfig.getRandomNumber(8)));
         vnp_Params.put("vnp_OrderInfo", paymentDTO.getDescription());
         vnp_Params.put("vnp_OrderType", PaymentConfig.ORDERTYPE);
         vnp_Params.put("vnp_Locale", PaymentConfig.LOCALDEFAULT);
@@ -99,22 +102,28 @@ public class PaymentController {
             @RequestParam(value = "vnp_ResponseCode",required = false) String responseCode,
             @RequestParam(value = "vnp_TxnRef",required = false) String txnRef,
             @RequestParam(value = "vnp_SecureHashType",required = false) String secureHashType,
-            @RequestParam(value = "vnp_SecureHash",required = false) String secureHash
+            @RequestParam(value = "vnp_SecureHash",required = false) String secureHash,
+            @RequestParam(value = "accountId",required = false) String accountId
 
     )  {
-        Transaction transaction = new Transaction();
-        transaction.setAmount(Float.valueOf(amount));
-        transaction.setBankCode(bankCode);
-        transaction.setBankTranNo(bankTranNo);
-        transaction.setCardType(cardType);
-        transaction.setPayDate(payDate);
-        transaction.setOrderInfo(orderInfo);
-        transaction.setResponseCode(responseCode);
-        transaction.setOrderId(Long.valueOf(txnRef));
-        transaction.setSecureHashType(secureHashType);
-        transaction.setSecureHash(secureHash);
-
-        transactionService.save(transaction);
-        return ResponseEntity.ok(transaction);
+        Order order = orderService.findNewstOrderByAccount(Long.valueOf(accountId));
+        TransactionHistory transaction1 = transactionService.findByOrderId(order.getId());
+        if (transaction1 == null){
+            TransactionHistory transaction = new TransactionHistory();
+            transaction.setAmount(Float.valueOf(amount));
+            transaction.setBankCode(bankCode);
+            transaction.setBankTranNo(bankTranNo);
+            transaction.setCardType(cardType);
+            transaction.setPayDate(payDate);
+            transaction.setOrderInfo(orderInfo);
+            transaction.setResponseCode(responseCode);
+            transaction.setOrderId(order.getId());
+            transaction.setSecureHashType(secureHashType);
+            transaction.setSecureHash(secureHash);
+            orderDetailService.findByOrderIdAndUpdateQuantityBook(order.getId());
+            transactionService.save(transaction);
+            return ResponseEntity.ok(transaction);
+        }
+        return ResponseEntity.ok(transaction1);
     }
 }

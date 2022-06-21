@@ -26,7 +26,6 @@ public class BookService implements IBookService {
     @Override
     public List<FeaturedBookDTO> getAllBookFeatured() {
         List<FeaturedBookDTO> listFeaturedBook = entityManager.createNamedQuery("getFeaturedBook").getResultList();
-        System.out.println(listFeaturedBook);
         return listFeaturedBook;
     }
 

@@ -62,4 +62,9 @@ public class OrderController {
     public List<Order> findByAccountId(@PathVariable long id) {
         return orderService.findByAccountId(id);
     }
+    @PutMapping("/updateFinished")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    public Order updateFinished(@RequestBody Order order) {
+        return orderService.updateIsFinished(order);
+    }
 }

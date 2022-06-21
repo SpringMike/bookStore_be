@@ -4,6 +4,7 @@ import com.example.demo.model.Author;
 import com.example.demo.model.Publisher;
 import com.example.demo.service.impl.AuthorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import java.util.List;
 public class AuthorController {
     private final AuthorService authorService;
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Author> getAllAuthor(){
         return authorService.getAllAuthor();
     }

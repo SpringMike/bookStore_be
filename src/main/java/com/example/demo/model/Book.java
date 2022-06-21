@@ -122,5 +122,13 @@ public class Book {
     @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    private List<Favorite> favorites;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
     private boolean status;
 }

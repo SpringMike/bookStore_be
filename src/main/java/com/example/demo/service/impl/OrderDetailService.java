@@ -28,13 +28,19 @@ public class OrderDetailService implements IOrderDetailService {
     public List<OrderDetail> save(List<OrderDetail> orderDetailList,long orderId) {
         for (OrderDetail orderDetail : orderDetailList) {
             orderDetail.setOrderId(orderId);
+        }
+        return orderDetailRepo.saveAll(orderDetailList);
+    }
+    @Override
+    public List<OrderDetail> findByOrderIdAndUpdateQuantityBook(long orderId) {
+        List<OrderDetail> list = orderDetailRepo.findByOrderId(orderId);
+        for (OrderDetail orderDetail : list) {
             Book book = bookRepo.findById(orderDetail.getBookId()).get();
             book.setQuantity(book.getQuantity() - orderDetail.getQuantity());
             bookRepo.save(book);
         }
-        return orderDetailRepo.saveAll(orderDetailList);
+        return list;
     }
-
     @Override
     public OrderDetail update(OrderDetail orderDetail) {
         return null;
@@ -44,6 +50,10 @@ public class OrderDetailService implements IOrderDetailService {
     public Optional<OrderDetail> findById(long id) {
         return Optional.empty();
     }
+
+
+
+
 
     @Override
     public void deleteById(long id) {

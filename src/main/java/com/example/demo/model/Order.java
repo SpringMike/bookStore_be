@@ -31,6 +31,7 @@ import java.util.List;
                                 @ColumnResult(name="address", type = String.class),
                                 @ColumnResult(name="total", type = Double.class),
                                 @ColumnResult(name="status_order_id", type = Long.class),
+                                @ColumnResult(name = "finished",type = Boolean.class)
                         }
                 )
         }
@@ -48,6 +49,9 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private ETypeOrder typeOrder;
 
+    @Column(name = "finished")
+    private Boolean isFinished;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "accountId", insertable = false,updatable = false)
@@ -63,5 +67,5 @@ public class Order {
     private List<OrderDetail> orderDetails;
 
     @OneToOne(mappedBy = "order")
-    private Transaction transaction;
+    private TransactionHistory transactionHistory;
 }

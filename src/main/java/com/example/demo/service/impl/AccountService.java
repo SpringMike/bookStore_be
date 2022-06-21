@@ -91,7 +91,7 @@ public class AccountService implements IAccountService {
     }
     @Override
     public Optional<Account> findById(long id) {
-        return Optional.empty();
+        return accountRepo.findById(id);
     }
 
     @Override

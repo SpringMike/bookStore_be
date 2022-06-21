@@ -17,5 +17,8 @@ public interface IOrderDetailService {
 
     Optional<OrderDetail> findById(long id);
 
+    List<OrderDetail> findByOrderIdAndUpdateQuantityBook(long orderId);
+
+
     void deleteById(long id);
 }

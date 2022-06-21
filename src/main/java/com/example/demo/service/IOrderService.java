@@ -11,6 +11,8 @@ public interface IOrderService {
 
     List<Order> getAllOrder();
 
+    Order findNewstOrderByAccount(Long accountId);
+
     List<OrderDTO> findByStatusHistory(long id);
 
     Order save(Order order);
@@ -19,6 +21,7 @@ public interface IOrderService {
 
     List<Order> findByAccountId(long id);
 
+    Order updateIsFinished(Order order);
 
 //    Order updateStatus(long id);
 

@@ -1,11 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Transaction;
+import com.example.demo.dto.TransactionDTO;
+import com.example.demo.model.TransactionHistory;
 
 import java.util.List;
-
 public interface ITransactionService {
-    List<Transaction> getAllTransaction();
+    List<TransactionDTO> getAllTransaction();
 
-    Transaction save(Transaction transaction);
+    TransactionHistory save(TransactionHistory transaction);
+
+    TransactionHistory findByOrderId(long orderId);
 }

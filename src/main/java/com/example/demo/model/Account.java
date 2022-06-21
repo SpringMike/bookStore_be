@@ -49,4 +49,7 @@ public class Account {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "account",cascade = CascadeType.ALL)
+    private List<Favorite> favorites;
 }

@@ -34,6 +34,11 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public Order findNewstOrderByAccount(Long accountId) {
+        return orderRepo.findNewstOrderByAccountId(accountId);
+    }
+
+    @Override
     public List<OrderDTO> findByStatusHistory(long id) {
         String sql ="SELECT\n" +
                 "       order_status_history.id as id,\n" +
@@ -43,13 +48,14 @@ public class OrderService implements IOrderService {
                 "       max_date = max(order_status_history.create_date),\n" +
                 "       o.address,\n" +
                 "       o.total,\n" +
-                "       order_status_history.status_order_id\n" +
+                "       order_status_history.status_order_id,\n" +
+                "       o.finished     \n"+
                 "FROM order_status_history\n" +
                 "         inner join [order] o on o.id = order_status_history.order_id\n" +
                 "         inner join account a on a.id = o.account_id\n" +
                 "         inner join order_detail od on o.id = od.order_id\n" +
                 "group by  a.full_name, o.address,\n" +
-                "          o.id, o.total, a.phone_number, order_status_history.status_order_id,order_status_history.is_done, order_status_history.id\n" +
+                "          o.id, o.total, a.phone_number, order_status_history.status_order_id,order_status_history.is_done, order_status_history.id,o.finished\n" +
                 "having order_status_history.status_order_id = ?1 and order_status_history.is_done = 'true'";
 
         Query query = this.entityManager.createNativeQuery(sql.toString(),"FeaturedOrderMapping");
@@ -76,6 +82,7 @@ public class OrderService implements IOrderService {
         OrderStatusHistory orderStatusHistoryFromDb = orderHistoryStatusService.findById(orderStatusHistoryId).get();
         if (orderFromDB != null) {
             orderFromDB.getOrderStatusHistories().add(order.getOrderStatusHistories().get(0));
+            orderFromDB.setIsFinished(order.getIsFinished());
             orderStatusHistoryFromDb.setDone(false);
             orderHistoryStatusService.save(orderStatusHistoryFromDb);
             orderRepo.save(orderFromDB);
@@ -86,6 +93,16 @@ public class OrderService implements IOrderService {
     @Override
     public List<Order> findByAccountId(long id) {
         return orderRepo.findByAccountId(id);
+    }
+
+    @Override
+    public Order updateIsFinished(Order order) {
+        Order orderFromDB = orderRepo.findById(order.getId()).orElse(null);
+        if (orderFromDB != null) {
+            orderFromDB.setIsFinished(order.getIsFinished());
+            orderRepo.save(orderFromDB);
+        }
+        return null;
     }
 
     @Override

@@ -14,4 +14,12 @@ public interface IOrderRepo extends JpaRepository<Order,Long> {
     List<Order> findTopByOrderStatusHistoriesDesc(Long id);
 
     List<Order> findByAccountId(long id);
+
+    @Query(nativeQuery = true,value = "select top 1 [order].id as id,[order].account_id,[order].total,\n" +
+            "       [order].create_date,[order].type_order,[order].address,[order].description,[order].finished\n" +
+            "from [order]\n" +
+            "inner join account a on a.id = [order].account_id\n" +
+            "where account_id=?1\n" +
+            "order by id desc")
+    Order findNewstOrderByAccountId(Long accountId);
 }

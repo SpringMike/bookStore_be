@@ -11,15 +11,17 @@ import javax.persistence.Id;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDTO {
+public class TransactionDTO {
     @Id
     private Long id;
-    private long orderId;
-    private String fullName;
-    private String phoneNumber;
+
+    private Float amount;
+    private String bankCode;
+    private String bankTranNo;
+    private String cardType;
+    private String orderInfo;
     private String createDate;
-    private String address;
-    private double total;
-    private long statusOrderId;
-    private Boolean finished;
+    private String accountName;
+    private Long orderId;
+
 }
