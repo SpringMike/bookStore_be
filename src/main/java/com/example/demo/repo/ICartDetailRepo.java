@@ -18,4 +18,5 @@ public interface ICartDetailRepo extends JpaRepository<CartDetail,Long> {
     @Query(nativeQuery = true,value = "delete from cart_detail where id in (?1)")
     void deleteByIds(List<Integer> id);
 
+    CartDetail findByBookIdAndCartId(long bookId, long cartId);
 }

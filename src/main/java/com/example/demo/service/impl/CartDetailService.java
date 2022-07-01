@@ -19,6 +19,7 @@ import java.util.List;
 public class CartDetailService implements ICartDetailService {
 
     private final ICartDetailRepo cartDetailRepo;
+    private final BookService bookService;
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -52,7 +53,11 @@ public class CartDetailService implements ICartDetailService {
 
     @Override
     public CartDetail save(CartDetail cartDetail) {
-        return cartDetailRepo.save(cartDetail);
+        CartDetail cartDetail1 = cartDetailRepo.findByBookIdAndCartId(cartDetail.getBookId(),cartDetail.getCartId());
+        if (cartDetail1 ==null){
+            return cartDetailRepo.save(cartDetail);
+        }
+        return null;
     }
 
     @Override
@@ -67,8 +72,8 @@ public class CartDetailService implements ICartDetailService {
     }
 
     @Override
-    public CartDetail findById(long id) {
-        return null;
+    public CartDetail findById(long bookId,long cartId) {
+        return cartDetailRepo.findByBookIdAndCartId(bookId,cartId);
     }
 
 

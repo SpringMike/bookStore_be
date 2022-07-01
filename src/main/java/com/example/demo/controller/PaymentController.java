@@ -5,6 +5,8 @@ import com.example.demo.dto.PaymentDTO;
 import com.example.demo.dto.PaymentResultDTO;
 import com.example.demo.model.Order;
 import com.example.demo.model.TransactionHistory;
+import com.example.demo.service.IOrderDetailService;
+import com.example.demo.service.IOrderService;
 import com.example.demo.service.ITransactionService;
 import com.example.demo.service.impl.OrderDetailService;
 import com.example.demo.service.impl.OrderService;
@@ -27,8 +29,8 @@ import java.util.*;
 public class PaymentController {
 
     private final ITransactionService transactionService;
-    private final OrderService orderService;
-    private final OrderDetailService orderDetailService;
+    private final IOrderService orderService;
+    private final IOrderDetailService orderDetailService;
 
     @PostMapping("/create-payment")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")

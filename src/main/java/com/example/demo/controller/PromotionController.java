@@ -4,6 +4,7 @@ import com.example.demo.model.Account;
 import com.example.demo.model.Category;
 import com.example.demo.model.Promotion;
 import com.example.demo.service.ICartRepo;
+import com.example.demo.service.IPromotionService;
 import com.example.demo.service.impl.AccountService;
 import com.example.demo.service.impl.PromotionService;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("api/promotions")
 @AllArgsConstructor
 public class PromotionController {
-    private final PromotionService promotionService;
+    private final IPromotionService promotionService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

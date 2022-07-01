@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.CartDetailDTO;
 import com.example.demo.model.CartDetail;
+import com.example.demo.service.ICartDetailService;
 import com.example.demo.service.impl.CartDetailService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import java.util.List;
 @RequestMapping("/api/cartDetails")
 @CrossOrigin("*")
 public class CartDetailController {
-    private final CartDetailService cartDetailService;
+    private final ICartDetailService cartDetailService;
 
     @GetMapping("/{cartId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")

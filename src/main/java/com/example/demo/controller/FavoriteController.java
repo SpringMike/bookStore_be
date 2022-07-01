@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.FavoriteDTO;
 import com.example.demo.model.CartDetail;
 import com.example.demo.model.Favorite;
+import com.example.demo.service.IFavoriteService;
 import com.example.demo.service.impl.FavoriteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FavoriteController {
 
-    private final FavoriteService favoriteService;
+    private final IFavoriteService favoriteService;
 
     @GetMapping("/findByAccount/{id}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")

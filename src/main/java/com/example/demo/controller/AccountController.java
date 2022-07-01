@@ -4,6 +4,7 @@ import com.example.demo.dto.FeaturedBookDTO;
 import com.example.demo.model.Account;
 import com.example.demo.model.Cart;
 import com.example.demo.payload.request.LoginRequest;
+import com.example.demo.service.IAccountService;
 import com.example.demo.service.ICartRepo;
 import com.example.demo.service.impl.AccountService;
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AccountController {
 
-    private final AccountService accountService;
+    private final IAccountService accountService;
     private final ICartRepo cartRepo;
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

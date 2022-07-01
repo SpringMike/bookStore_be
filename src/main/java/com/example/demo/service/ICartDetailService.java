@@ -14,7 +14,7 @@ public interface ICartDetailService {
 
     CartDetail update(CartDetail cartDetail);
 
-    CartDetail findById(long id);
+    CartDetail findById(long bookId,long cartId);
 
     void deleteById(List<Integer> id);
 }

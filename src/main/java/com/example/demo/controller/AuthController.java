@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.Account;
 import com.example.demo.model.Cart;
 import com.example.demo.payload.request.LoginRequest;
+import com.example.demo.service.IAccountService;
 import com.example.demo.service.ICartRepo;
 import com.example.demo.service.impl.AccountService;
 import com.example.demo.service.impl.CartService;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AccountService accountService;
+    private final IAccountService accountService;
     private final CartService cartService;
     @PostMapping("/log-in")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {

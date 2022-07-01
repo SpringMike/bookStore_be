@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.CommentDTO;
 import com.example.demo.dto.FavoriteDTO;
 import com.example.demo.model.Comment;
+import com.example.demo.service.ICommentService;
 import com.example.demo.service.impl.CommentService;
 import com.example.demo.service.impl.FavoriteService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("api/comments")
 @RequiredArgsConstructor
 public class CommentController {
-    private final CommentService commentService;
+    private final ICommentService commentService;
 
     @GetMapping
     public List<Comment> getAllComment(){

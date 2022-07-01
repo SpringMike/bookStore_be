@@ -2,6 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.OrderDTO;
 import com.example.demo.model.*;
+import com.example.demo.service.IOrderDetailService;
+import com.example.demo.service.IOrderHistoryStatusService;
+import com.example.demo.service.IOrderService;
 import com.example.demo.service.impl.OrderDetailService;
 import com.example.demo.service.impl.OrderHistoryStatusService;
 import com.example.demo.service.impl.OrderService;
@@ -19,9 +22,9 @@ import java.util.Optional;
 @CrossOrigin("*")
 public class OrderController {
 
-    private final OrderService orderService;
-    private final OrderDetailService orderDetailService;
-    private final OrderHistoryStatusService orderHistoryStatusService;
+    private final IOrderService orderService;
+    private final IOrderDetailService orderDetailService;
+    private final IOrderHistoryStatusService orderHistoryStatusService;
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public List<Order> getAllOrder() {

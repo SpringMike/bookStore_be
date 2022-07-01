@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.dto.BookResponse;
 import com.example.demo.dto.FeaturedBookDTO;
 import com.example.demo.model.Book;
+import com.example.demo.service.IBookService;
 import com.example.demo.service.impl.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public class BookController {
-    private final BookService bookService;
+    private final IBookService bookService;
 
 //    @GetMapping("/bookId/{id}")
 //    public List<Book> getProductByIdCate(@PathVariable int id){
